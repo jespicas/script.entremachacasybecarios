@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.entremachacasybecarios" name="Entre machacas y becarios" version="1.0.0" provider-name="_Espi_">
+	<requires>
+		<import addon="xbmc.python" version="2.10.0" />
+		<import addon="script.module.elementtree" version="1.2.7" />
+		<import addon="script.module.beautifulsoup" version="3.2.1" />
+	</requires>
+
+	<extension point="xbmc.python.pluginsource" library="default.py">
+		<provides>executable</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">MongolFriday Photos on Kodi</summary>
+		<summary lang="ca">MongolFriday Photos a Kodi</summary>
+		<summary lang="es">MongolFriday Photos on Kodi</summary>
+		<description>Mongol Friday photo allow you to: View all volum that publish every friday </description>
+		<description lang="es">Mongol Friday photo le permite: Recorrer todos los volumens que salen cada viernes hasta el dia de hoy.</description>
+		<description lang="ca">Mongol Friday photo et permet: Recorrer todos els volums que han sortit de cada divendres fins al dia d\'avui.</description>
+		<platform>all</platform>
+		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+		<forum></forum>
+		<source>https://github.com/jespicas/plugin.image.mongolfridayphotos</source>
+	</extension>
+</addon>
