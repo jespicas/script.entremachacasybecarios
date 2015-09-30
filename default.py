@@ -48,7 +48,8 @@ if __name__ == '__main__':
     def AddVideo(IdYoutube,EndDirectory):
                 url = build_url({'mode': 'playYoutube', 'idYoutube': IdYoutube,'value':"123"})
                 #url = 'plugin://plugin.image.mongolfridayphotos?foldername=mongol-friday-photos-vol-352&mode=slideshow&value=http://www.machacas.com/mongol-friday-photos-vol-352/'
-                li = xbmcgui.ListItem(IdYoutube, iconImage='DefaultFolder.png')
+
+                li = xbmcgui.ListItem("Video", iconImage='http://img.youtube.com/vi/'+IdYoutube+'/default.jpg')
                 xbmcplugin.addDirectoryItem(handle=addon_handle, url=url,listitem=li, isFolder=True)
                 if (EndDirectory):
                     print "EndDirectory"
@@ -132,6 +133,7 @@ if __name__ == '__main__':
             NumVideos = 1
             EndDirectory = False
             for video in paragrahp.findAll('iframe'):
+                print video
                 print NumVideos
                 idYoutube = video.attrs[2][1]
                 idYoutube = idYoutube.split('/')[4].split('?')[0]
