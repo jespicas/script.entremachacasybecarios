@@ -55,6 +55,19 @@ if __name__ == '__main__':
                     print "EndDirectory"
                     xbmcplugin.endOfDirectory(addon_handle)
 
+    def KindOfVideo(video):
+        for attribs in video.attrs:
+            if attribs[0].find('src') != -1:
+                url = attribs[1]
+                if url.find('youtube') != -1:
+                    print "Youtube video!!"
+                    idYoutube = url.split('/')[4].split('?')[0]
+                    xbmc.executebuiltin( "XBMC.PlayMedia(plugin://plugin.video.youtube/play/?video_id="+idYoutube+")")
+                if url.find('vimeo') != -1:
+                    idVimeo = url.split('/')[4]
+                    xbmc.executebuiltin( "XBMC.PlayMedia(plugin://plugin.video.vimeo/play/?video_id="+idVimeo+")")
+                    print "Vimeo Video"
+
     def AddItems(Url,currentPage,EndDirectory):
         #print Url
         r = requests.get(Url)
@@ -112,6 +125,10 @@ if __name__ == '__main__':
         idYoutube = args['idYoutube'][0]
         xbmc.executebuiltin( "XBMC.PlayMedia(plugin://plugin.video.youtube/play/?video_id="+idYoutube+")")
         #XBMC.PlayMedia('plugin://plugin.video.youtube/play/?video_id='+idYoutube+')'
+    elif mode[0] == 'playVimeo':
+        print args
+        idVimeo = args['idVimeo'][0]
+        xbmc.executebuiltin( "XBMC.PlayMedia(plugin://plugin.video.vimeo/play/?video_id="+idVimeo+")")
 
     elif mode[0] == 'playMongol':
         picture = ""
@@ -145,10 +162,11 @@ if __name__ == '__main__':
                 AddVideo(idYoutube,EndDirectory)
         else:
             video = paragrahp.find('iframe')
-            idYoutube = video.attrs[2][1]
-            idYoutube = idYoutube.split('/')[4].split('?')[0]
-            xbmc.executebuiltin( "XBMC.PlayMedia(plugin://plugin.video.youtube/play/?video_id="+idYoutube+")")
-            #print video
+            KindOfVideo(video)
+            #idYoutube = video.attrs[2][1]
+            #idYoutube = idYoutube.split('/')[4].split('?')[0]
+            #xbmc.executebuiltin( "XBMC.PlayMedia(plugin://plugin.video.youtube/play/?video_id="+idYoutube+")")
+
 
         #if QuantityImages > 1:
         #    print paragrahp.prettify()
