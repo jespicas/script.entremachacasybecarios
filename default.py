@@ -52,8 +52,11 @@ if __name__ == '__main__':
     def AddVideo(IdYoutube,EndDirectory):
                 url = build_url({'mode': 'playYoutube', 'idYoutube': IdYoutube,'value':"123"})
                 #url = 'plugin://plugin.image.mongolfridayphotos?foldername=mongol-friday-photos-vol-352&mode=slideshow&value=http://www.machacas.com/mongol-friday-photos-vol-352/'
+                you = requests.get('https://www.youtube.com/watch?v='+IdYoutube).text
+                youBeauty = BeautifulSoup(you,"html.parser")
+                videoTitle = youBeauty.find("span", id="eow-title").attrs["title"]
 
-                li = xbmcgui.ListItem("Video", iconImage='http://img.youtube.com/vi/'+IdYoutube+'/default.jpg')
+                li = xbmcgui.ListItem(videoTitle, iconImage='http://img.youtube.com/vi/'+IdYoutube+'/default.jpg')
                 xbmcplugin.addDirectoryItem(handle=addon_handle, url=url,listitem=li, isFolder=True)
                 if (EndDirectory):
                     print "EndDirectory"
@@ -111,11 +114,6 @@ if __name__ == '__main__':
                 AddItems('http://www.machacas.com/page/'+str(Page),Page,True)
             else:
                 AddItems('http://www.machacas.com/page/'+str(Page),Page,False)
-
-        you = requests.get('https://www.youtube.com/watch?v=ScY179qa5pM').text
-        youBeauty = BeautifulSoup(you,"html.parser")
-        print youBeauty.find("span", id="eow-title").attrs["title"]
-
     elif mode[0] == 'next':
         print 'Enter on next'
         valors = args['value'][0]
@@ -151,11 +149,11 @@ if __name__ == '__main__':
         url = args['value'][0]
         r = requests.get(url)
         data = r.text
-        soup = BeautifulSoup(data)
+        soup = BeautifulSoup(data,"html.parser")
         link = soup.body.find("article")
         paragrahp = link.find('p')
-        QuantityVideos = len(paragrahp.findAll('iframe'))
-        QuantityImages = len(paragrahp.findAll('img'))
+        QuantityVideos = len(paragrahp.find_all('iframe'))
+        QuantityImages = len(paragrahp.find_all('img'))
         if QuantityVideos > 1:
             print QuantityVideos
             NumVideos = 1
