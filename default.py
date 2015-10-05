@@ -29,10 +29,11 @@ if __name__ == '__main__':
     # Get all the arguments
     base_url = sys.argv[0]
     print base_url
-    print "Hello world"
+
     addon_handle = int(sys.argv[1])
     args = urlparse.parse_qs(sys.argv[2][1:])
     xbmcplugin.setContent(addon_handle, 'movies')
+
     def build_url(query):
         return base_url + '?' + urllib.urlencode(query)
 
@@ -42,11 +43,11 @@ if __name__ == '__main__':
     Url = 'http://www.machacas.com/'
     r = requests.get(Url)
     data = r.text
-    soup = BeautifulSoup(data)
+    soup = BeautifulSoup(data,"html.parser")
 
-    DivPagination = soup.body.findAll("div",{"class": "pagination"})
+    DivPagination = soup.body.find_all("div",class_="pagination")
     last = DivPagination[0].findAll('a')
-    print last[3].attrs['href']
+
     MaxPage = last[len(last)-1].attrs['href'].split('/')[len(last[len(last)-1].attrs['href'].split('/')) -1]
     def AddVideo(IdYoutube,EndDirectory):
                 url = build_url({'mode': 'playYoutube', 'idYoutube': IdYoutube,'value':"123"})
@@ -73,19 +74,20 @@ if __name__ == '__main__':
                     print "Vimeo Video"
 
     def AddItems(Url,currentPage,EndDirectory):
-        #print Url
-        r = requests.get(Url)
-        data = r.text
-        soup = BeautifulSoup(data)
+        print Url
+        data = requests.get(Url).text
 
-        for link in soup.body.find_all("div", class_= "blog-item-wrap" ):
-            href = link.find('a').attrs['href']
+        soup = BeautifulSoup(data,"html.parser")
+
+        for link in soup.find_all("div", class_= "blog-item-wrap" ):
+            href = link.find('a').attrs["href"]
+            print href
             VolName = href.split('/')[3]
             print VolName
             if VolName.find("mongol-friday") != -1:
                 print "Play Script ..."
                 url = build_url({'mode': 'playMongol', 'foldername': VolName,'value':href})
-                #url = 'plugin://plugin.image.mongolfridayphotos?foldername=mongol-friday-photos-vol-352&mode=slideshow&value=http://www.machacas.com/mongol-friday-photos-vol-352/'
+               #url = 'plugin://plugin.image.mongolfridayphotos?foldername=mongol-friday-photos-vol-352&mode=slideshow&value=http://www.machacas.com/mongol-friday-photos-vol-352/'
                 li = xbmcgui.ListItem(VolName, iconImage='DefaultFolder.png')
                 xbmcplugin.addDirectoryItem(handle=addon_handle, url=url,listitem=li, isFolder=True)
             else:
@@ -103,7 +105,7 @@ if __name__ == '__main__':
 
             xbmcplugin.endOfDirectory(addon_handle)
     if mode is None:
-        AddItems('http://www.machacas.com/',1,False)
+        AddItems("http://www.machacas.com/",1,False)
         for Page in range(2,NumberPagination):
             if Page+1 == NumberPagination:
                 AddItems('http://www.machacas.com/page/'+str(Page),Page,True)
@@ -111,9 +113,7 @@ if __name__ == '__main__':
                 AddItems('http://www.machacas.com/page/'+str(Page),Page,False)
 
         you = requests.get('https://www.youtube.com/watch?v=ScY179qa5pM').text
-
-        youBeauty = BeautifulSoup(you)
-
+        youBeauty = BeautifulSoup(you,"html.parser")
         print youBeauty.find("span", id="eow-title").attrs["title"]
 
     elif mode[0] == 'next':
