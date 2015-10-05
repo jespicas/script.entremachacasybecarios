@@ -8,7 +8,8 @@ import xbmcgui
 import xbmcplugin
 import xbmcaddon
 import xbmcvfs
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
+#from BeautifulSoup import BeautifulSoup
 
 import requests
 
@@ -42,9 +43,11 @@ if __name__ == '__main__':
     r = requests.get(Url)
     data = r.text
     soup = BeautifulSoup(data)
+
     DivPagination = soup.body.findAll("div",{"class": "pagination"})
     last = DivPagination[0].findAll('a')
-    MaxPage = last[len(last)-1].attrs[0][1].split('/')[len(last[len(last)-1].attrs[0][1].split('/')) -1]
+    print last[3].attrs['href']
+    MaxPage = last[len(last)-1].attrs['href'].split('/')[len(last[len(last)-1].attrs['href'].split('/')) -1]
     def AddVideo(IdYoutube,EndDirectory):
                 url = build_url({'mode': 'playYoutube', 'idYoutube': IdYoutube,'value':"123"})
                 #url = 'plugin://plugin.image.mongolfridayphotos?foldername=mongol-friday-photos-vol-352&mode=slideshow&value=http://www.machacas.com/mongol-friday-photos-vol-352/'
@@ -56,6 +59,7 @@ if __name__ == '__main__':
                     xbmcplugin.endOfDirectory(addon_handle)
 
     def KindOfVideo(video):
+
         for attribs in video.attrs:
             if attribs[0].find('src') != -1:
                 url = attribs[1]
@@ -74,8 +78,8 @@ if __name__ == '__main__':
         data = r.text
         soup = BeautifulSoup(data)
 
-        for link in soup.body.findAll("div",{ "class" : "blog-item-wrap" }):
-            href = link.find('a').attrs[0][1]
+        for link in soup.body.find_all("div", class_= "blog-item-wrap" ):
+            href = link.find('a').attrs['href']
             VolName = href.split('/')[3]
             print VolName
             if VolName.find("mongol-friday") != -1:
@@ -105,6 +109,13 @@ if __name__ == '__main__':
                 AddItems('http://www.machacas.com/page/'+str(Page),Page,True)
             else:
                 AddItems('http://www.machacas.com/page/'+str(Page),Page,False)
+
+        you = requests.get('https://www.youtube.com/watch?v=ScY179qa5pM').text
+
+        youBeauty = BeautifulSoup(you)
+
+        print youBeauty.find("span", id="eow-title").attrs["title"]
+
     elif mode[0] == 'next':
         print 'Enter on next'
         valors = args['value'][0]
@@ -162,6 +173,7 @@ if __name__ == '__main__':
                 AddVideo(idYoutube,EndDirectory)
         else:
             video = paragrahp.find('iframe')
+
             KindOfVideo(video)
             #idYoutube = video.attrs[2][1]
             #idYoutube = idYoutube.split('/')[4].split('?')[0]
